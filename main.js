@@ -1,9 +1,6 @@
-const prospects = await buildMasterBoard()
-
-const metadata = {
-    sourceCount: 18,
-    lastUpdated: "Prototype"
-};
+const aggregate = await buildMasterBoard()
+const prospects = aggregate.master;
+const metadata = aggregate.meta;
 
 let currentRows = [...prospects];
 
@@ -194,6 +191,13 @@ async function buildMasterBoard() {
         })
     );
 
+    const boardMeta = {
+        totalBoards: rawBoards.length,
+        mostRecentBoardDate: rawBoards
+            .map(b => new Date(b.now))
+            .sort((a, b) => b - a)[0]
+    };
+
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -256,7 +260,13 @@ async function buildMasterBoard() {
             rank: index + 1
         }));
 
-    return master;
+    return {
+        master,
+        meta: {
+            sourceCount: boardMeta.totalBoards,
+            lastUpdated: boardMeta.mostRecentBoardDate.toISOString().split("T")[0]
+        }
+    };
 }
 
 initialize();
