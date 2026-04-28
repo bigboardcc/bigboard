@@ -1,5 +1,6 @@
-const aggregate = await buildMasterBoard()
-const prospects = aggregate.master;
+const res = await fetch("agg.json");
+const aggregate = await res.json();
+const prospects = aggregate.agg;
 const metadata = aggregate.meta;
 
 let currentRows = [...prospects];
@@ -92,7 +93,7 @@ function render(rows) {
         tr.innerHTML = `
             <td class="rank">${p.rank}</td>
             <td><div class="player"><strong>${p.name}</strong></div></td>
-            <td><span class="tag pos-${p.pos.replace("/", "").toLowerCase()}">${p.pos}</span></td>
+            <td><span class="tag pos-${p.pos.toLowerCase()}">${p.pos}</span></td>
             <td>${p.school}</td>
             <td>${p.boards}</td>
             <td>${p.avg.toFixed(1)}</td>
@@ -178,95 +179,6 @@ function initialize() {
     });
 
     filterRows();
-}
-
-async function buildMasterBoard() {
-    const manifestRes = await fetch("./json/raw-files.json");
-    const rawFiles = await manifestRes.json();
-
-    const rawBoards = await Promise.all(
-        rawFiles.map(async file => {
-            const res = await fetch(`./json/raw/${file}`);
-            return await res.json();
-        })
-    );
-
-    const boardMeta = {
-        totalBoards: rawBoards.length,
-        mostRecentBoardDate: rawBoards
-            .map(b => new Date(b.now))
-            .sort((a, b) => b - a)[0]
-    };
-
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-    const players = new Map();
-
-    for (const raw of rawBoards) {
-        const boardDate = new Date(raw.now);
-
-        for (const item of raw.board) {
-            const name = item.player || item.name;
-            const rank = Number(item.rank);
-
-            if (!name || !rank) continue;
-
-            const key = name.toLowerCase().replace(/[^\w]/g, "");
-
-
-            if (!players.has(key)) {
-                players.set(key, {
-                    name,
-                    pos: item.pos,
-                    school: item.team || item.school,
-                    ranks: [],
-                    recentRanks: []
-                });
-            }
-
-            const player = players.get(key);
-
-            player.ranks.push(rank);
-
-            if (boardDate >= sevenDaysAgo) {
-                player.recentRanks.push(rank);
-            }
-        }
-    }
-
-    const master = [...players.values()]
-        .map(player => {
-            const avg = player.ranks.reduce((a, b) => a + b, 0) / player.ranks.length;
-            const recentAvg = player.recentRanks.length
-                ? player.recentRanks.reduce((a, b) => a + b, 0) / player.recentRanks.length
-                : avg;
-
-            return {
-                rank: 0,
-                name: player.name,
-                pos: player.pos,
-                school: player.school,
-                boards: player.ranks.length,
-                avg: Number(avg.toFixed(1)),
-                high: Math.min(...player.ranks),
-                low: Math.max(...player.ranks),
-                trend: Number((avg - recentAvg).toFixed(1))
-            };
-        })
-        .sort((a, b) => a.avg - b.avg)
-        .map((player, index) => ({
-            ...player,
-            rank: index + 1
-        }));
-
-    return {
-        master,
-        meta: {
-            sourceCount: boardMeta.totalBoards,
-            lastUpdated: boardMeta.mostRecentBoardDate.toISOString().split("T")[0]
-        }
-    };
 }
 
 initialize();
