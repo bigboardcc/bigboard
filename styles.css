@@ -473,7 +473,7 @@ tbody tr:hover {
 }
 
 /* EDGE — Crimson */
-.pos-ed{
+.pos-ed, .pos-deed{
 	background: rgba(220, 20, 60, 0.12);
 	color: #ff8ca8;
 	border: 1px solid rgba(220, 20, 60, 0.28);
@@ -487,7 +487,7 @@ tbody tr:hover {
 }
 
 /* LB — Lime */
-.pos-lb{
+.pos-lb, .pos-lbed{
 	background: rgba(50, 215, 75, 0.12);
 	color: #9cffab;
 	border: 1px solid rgba(50, 215, 75, 0.28);
