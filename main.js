@@ -89,8 +89,8 @@ function render(rows) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
         <td class="rank">${p.rank}</td>
-        <td><div class="player"><strong>${p.name}</strong><span>${p.school}</span></div></td>
-        <td><span class="tag">${p.pos}</span></td>
+        <td><div class="player"><strong>${p.name}</strong></div></td>
+        <td><span class="tag pos-${p.pos.toLowerCase()}">${p.pos}</span></td>
         <td>${p.school}</td>
         <td>${p.boards}</td>
         <td>${p.avg.toFixed(1)}</td>
