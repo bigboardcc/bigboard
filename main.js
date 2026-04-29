@@ -160,7 +160,6 @@ function initialize() {
     document.getElementById("statPlayers").textContent = prospects.length;
     document.getElementById("statSources").textContent = metadata.sourceCount;
     document.getElementById("statUpdated").textContent = metadata.lastUpdated;
-    document.getElementById("lastUpdated").textContent = metadata.lastUpdated;
     document.getElementById("year").textContent = new Date().getFullYear();
 
     searchInput.addEventListener("input", filterRows);
