@@ -90,6 +90,8 @@ function render(rows) {
         // Desktop table row
         const tr = document.createElement("tr");
 
+        tr.dataset.player = p.name;
+
         tr.innerHTML = `
             <td class="rank">${p.rank}</td>
             <td><div class="player"><strong>${p.name}</strong></div></td>
@@ -106,7 +108,7 @@ function render(rows) {
         // Mobile card
         const card = document.createElement("article");
         card.className = "mobile-card";
-
+        card.dataset.player = p.name;
         card.innerHTML = `
             <div class="mobile-card-top">
                 <div>
@@ -179,5 +181,36 @@ function initialize() {
 
     filterRows();
 }
+
+async function openPlayerPage(slug) {
+  const res = await fetch(`/players/${slug}.html`);
+  const html = await res.text();
+
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const content = doc.querySelector("main")?.innerHTML || html;
+
+  document.querySelector("#playerSheetContent").innerHTML = content;
+  document.querySelector("#playerSheet").classList.add("open");
+}
+
+function closePlayerPage() {
+    document.querySelector("#playerSheet").classList.remove("open");
+}
+
+document.addEventListener("click", (e) => {
+    const row = e.target.closest("[data-player]");
+    if (!row) return;
+
+    const name = row.dataset.player;
+
+    const slug = name
+        .toLowerCase()
+        .replace(/['’.]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+
+    openPlayerPage(slug);
+    document.querySelector("#playerSheetClose")?.addEventListener("click", closePlayerPage);
+});
 
 initialize();
