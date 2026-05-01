@@ -803,7 +803,7 @@ display: block;
 
 .player-sheet.open {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -813,7 +813,7 @@ display: block;
   max-height: 82vh;
   overflow: auto;
   padding: 22px;
-  border-radius: 26px 26px 0 0;
+  border-radius: 0 0 26px 26px;
 
   background:
     radial-gradient(circle at top left, rgba(185, 28, 28, 0.18), transparent 42%),
