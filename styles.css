@@ -803,7 +803,7 @@ display: block;
 
 .player-sheet.open {
   display: flex;
-  align-items: flex-start;
+  align-items: start;
   justify-content: center;
 }
 
