@@ -194,10 +194,10 @@ color: transparent;
 
 .hero-copy {
 color: var(--muted);
-font-size: clamp(1.02rem, 2vw, 1.05rem);
+font-size: clamp(1.02rem, 2vw, 1.14rem);
 line-height: 1.65;
 max-width: 720px;
-margin: 0 0 26px;
+margin: 0 0 40px;
 }
 
 .hero-actions {
@@ -408,6 +408,7 @@ th {
 
 tbody tr {
 	transition: background .15s ease;
+  cursor: pointer;
 }
 
 tbody tr:hover {
